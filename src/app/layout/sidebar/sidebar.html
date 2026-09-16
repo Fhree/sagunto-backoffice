@@ -1,0 +1,36 @@
+<aside class="sidebar">
+  <div class="brand">
+    <div class="logo-icon">
+      <i class="pi pi-shield"></i>
+    </div>
+    <div class="brand-text">
+      <h2>SAGUNTO</h2>
+      <span>BACKOFFICE</span>
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <span class="section-title">NAVEGACIÓN PRINCIPAL</span>
+    <nav class="nav-list">
+      @for (item of navItems; track item.route) {
+        <a [routerLink]="item.route" 
+           routerLinkActive="active" 
+           [routerLinkActiveOptions]="{ exact: item.route === '/' }"
+           class="nav-item">
+          <i [class]="item.icon"></i>
+          <span>{{ item.label }}</span>
+        </a>
+      }
+    </nav>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="status-badge">
+      <span class="dot"></span>
+      <div class="status-info">
+        <span class="title">SISTEMA ACTIVO</span>
+        <span class="sub">PostgreSQL / .NET</span>
+      </div>
+    </div>
+  </div>
+</aside>
