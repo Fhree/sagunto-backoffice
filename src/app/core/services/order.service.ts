@@ -18,20 +18,20 @@ export class OrderService {
 
 
   getGeneralConsumption(): Observable<CustomerConsumptionSummary[]> {
-    return this.http.get<CustomerConsumptionSummary[]>(`${this.apiUrl}/general-consumption`);
+    return this.http.get<CustomerConsumptionSummary[]>(`${this.apiUrl}/reports/general-consumption`);
   }
 
   exportGeneralConsumptionCsv(): Observable<Blob> {
-    return this.http.get(`${this.apiUrl}/general-consumption/export-csv`, {
+    return this.http.get(`${this.apiUrl}/reports/general-consumption/export-csv`, {
       responseType: 'blob'
     });
   }
 
   getUserPendingOrders(customerId: number): Observable<OrderDetailDto[]> {
-    return this.http.get<OrderDetailDto[]>(`${this.apiUrl}/customers/${customerId}/detail`);
+    return this.http.get<OrderDetailDto[]>(`${this.apiUrl}/reports/customers/${customerId}/detail`);
   }
 
   getBartenderPerformance(): Observable<BartenderPerformanceDto[]> {
-  return this.http.get<BartenderPerformanceDto[]>(`${this.apiUrl}/bartenders`);
+  return this.http.get<BartenderPerformanceDto[]>(`${this.apiUrl}/reports/bartenders`);
 }
 }
