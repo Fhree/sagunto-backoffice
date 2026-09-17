@@ -16,7 +16,6 @@ export class OrderService {
     return this.http.get<OrderKpis>(`${this.apiUrl}/reports/kpis`);
   }
 
-
   getGeneralConsumption(): Observable<CustomerConsumptionSummary[]> {
     return this.http.get<CustomerConsumptionSummary[]>(`${this.apiUrl}/reports/general-consumption`);
   }
