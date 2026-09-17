@@ -38,7 +38,7 @@
     <!-- KPI 2: Abonados en el momento -->
     <article class="kpi-card">
       <div class="kpi-header">
-        <span class="kpi-title">TOTAL CONSUMICIONES ABONADAS EN EL ACTO POR SAGUNTINOS</span>
+        <span class="kpi-title">TOTAL CONSUMICIONES PAGADAS SAGUNTINOS</span>
         <div class="kpi-icon-badge success">
           <i class="pi pi-check-circle"></i>
         </div>
@@ -52,7 +52,7 @@
     <!-- KPI 3: Invitados -->
     <article class="kpi-card">
       <div class="kpi-header">
-        <span class="kpi-title">TOTAL CONSUMICIONES POR INVITADOS</span>
+        <span class="kpi-title">TOTAL CONSUMICIONES INVITADOS</span>
         <div class="kpi-icon-badge neutral">
           <i class="pi pi-users"></i>
         </div>
@@ -62,58 +62,58 @@
         <span class="kpi-counter"><strong>{{ kpis().guestsCount }}</strong> comandas registradas</span>
       </div>
     </article>
-  </section>
-
-  <!-- Tabla de Morosos / Cuentas Pendientes -->
-<section class="table-wrapper">
-  <p-table 
-    #dt 
-    [value]="consumptions()" 
-    dataKey="customerId"
-    [paginator]="true" 
-    [rows]="10" 
-    [rowsPerPageOptions]="[10, 25, 50]"
-    [loading]="loading()"
-    [globalFilterFields]="['name', 'surname', 'customerId']"
-    styleClass="p-datatable-striped">
-    
-    <!-- CAMBIO 1: #caption en lugar de pTemplate="caption" -->
-    <ng-template #caption>
-      <div class="table-caption">
-        <span class="caption-title">Consumo Histórico por Saguntino</span>
-        <div class="p-input-icon-left search-input">
-          <i class="pi pi-search"></i>
-          <input 
-            pInputText 
-            type="text" 
-            (input)="dt.filterGlobal($any($event.target).value, 'contains')" 
-            placeholder="Buscar por nombre, apellido o ID..." />
+  
+    <article class="kpi-card absolute-total-card">
+      <div class="kpi-header">
+        <span class="kpi-title">TOTAL ABSOLUTO</span>
+        <div class="kpi-icon-badge primary">
+          <i class="pi pi-wallet"></i>
         </div>
       </div>
-    </ng-template>
+      <div class="kpi-value">{{ kpis().totalAbsolute | currency:'EUR':'symbol':'1.2-2':'es-ES' }}</div>
+      <div class="kpi-footer">
+        <span class="kpi-counter"><strong>{{ kpis().totalOrdersCount }}</strong> operaciones registradas</span>
+      </div>
+    </article>
+  </section>
+  <!-- Tabla de Morosos / Cuentas Pendientes -->
+  <section class="table-wrapper">
+    <p-table 
+      #dt 
+      [value]="consumptions()" 
+      dataKey="customerId"
+      [paginator]="true" 
+      [rows]="10" 
+      [rowsPerPageOptions]="[10, 25, 50]"
+      [loading]="loading()"
+      [globalFilterFields]="['name', 'surname', 'customerId']"
+      styleClass="p-datatable-striped">
+      
+      <!-- CAMBIO 1: #caption en lugar de pTemplate="caption" -->
+      <ng-template #caption>
+        <div class="table-caption">
+          <span class="caption-title">Consumo Histórico por Saguntino</span>
+        </div>
+      </ng-template>
 
-    <!-- CAMBIO 2: #header en lugar de pTemplate="header" -->
-    <ng-template #header>
-      <tr>
-        <th pSortableColumn="name">
-            Saguntino <i class="pi pi-sort-alt"></i>
-        </th>
-        <th pSortableColumn="totalConsumed" style="width: 180px; text-align: right;">
-            Total Consumido <i class="pi pi-sort-alt"></i>
-        </th>
-      </tr>
-    </ng-template>
+      <!-- CAMBIO 2: #header en lugar de pTemplate="header" -->
+      <ng-template #header>
+        <tr>
+          <th pSortableColumn="name">
+              Saguntino <i class="pi pi-sort-alt"></i>
+          </th>
+          <th pSortableColumn="totalConsumed" style="width: 180px; text-align: right;">
+              Total Consumido <i class="pi pi-sort-alt"></i>
+          </th>
+        </tr>
+      </ng-template>
 
-    <!-- CAMBIO 3: #body en lugar de pTemplate="body" -->
-    <ng-template #body let-row>
-      <tr>
+      <!-- CAMBIO 3: #body en lugar de pTemplate="body" -->
+      <ng-template #body let-row>
+      <tr (click)="openUserDetail(row)" class="clickable-row">
         <td class="user-cell">
           <span class="user-fullname">
-            @if (row.customerId < 0) {
-              {{ row.name }} (Anónimo)
-            } @else {
               {{ row.name }} {{ row.surname }}
-            }
           </span>
         </td>
         <td style="text-align: right;" class="debt-cell">
@@ -122,15 +122,70 @@
       </tr>
     </ng-template>
 
-    <!-- CAMBIO 4: #emptymessage en lugar de pTemplate="emptymessage" -->
-    <ng-template #emptymessage>
-      <tr>
-        <td colspan="4" class="empty-message">
-          <i class="pi pi-info-circle success-icon" style="color: #64748b;"></i>
-          <p>No hay consumos registrados en el sistema.</p>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
-</section>
+      <!-- CAMBIO 4: #emptymessage en lugar de pTemplate="emptymessage" -->
+      <ng-template #emptymessage>
+        <tr>
+          <td colspan="4" class="empty-message">
+            <i class="pi pi-info-circle success-icon" style="color: #64748b;"></i>
+            <p>No hay consumos registrados en el sistema.</p>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </section>
+
+  @if (isModalOpen()) {
+  <div class="custom-modal-overlay" (click)="closeModal()">
+    <div class="custom-modal-content" (click)="$event.stopPropagation()">
+      
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <h2>Comandas Pendientes de Pago</h2>
+          <span class="modal-subtitle">{{ selectedUserName() }}</span>
+        </div>
+        <button class="close-modal-btn" (click)="closeModal()">
+          <i class="pi pi-times"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        @if (loadingDetails()) {
+          <div class="modal-loading">Localizando tickets impagados...</div>
+        } @else if (userOrders().length === 0) {
+          <div class="modal-empty">Este saguntino no tiene deudas registradas</div>
+        } @else {
+          
+          <div class="orders-list">
+            @for (order of userOrders(); track order.orderId) {
+              <div class="order-ticket">
+                
+                <div class="ticket-header">
+                  <div class="ticket-info">
+                    <span class="ticket-id">Comanda #{{ order.orderId.substring(0, 8) }}</span>
+                    <span class="status-badge unpaid">Pendiente</span>
+                    <span class="ticket-id">{{ order.date | date:'dd/MM/yyyy' }}</span>
+                  </div>
+                  <span class="ticket-total">{{ order.orderTotal | currency:'EUR':'symbol':'1.2-2':'es-ES' }}</span>
+                </div>
+
+                <div class="ticket-items">
+                  @for (item of order.items; track item.productName) {
+                    <div class="item-row">
+                      <span class="item-qty">{{ item.quantity }}x</span>
+                      <span class="item-name">{{ item.productName }}</span>
+                      <span class="item-price">{{ (item.quantity * item.priceSnapshot) | currency:'EUR':'symbol':'1.2-2':'es-ES' }}</span>
+                    </div>
+                  }
+                </div>
+
+              </div>
+            }
+          </div>
+
+        }
+      </div>
+
+    </div>
+  </div>
+}
 </div>

@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { OrderKpis, CustomerConsumptionSummary } from '../models/order.model';
+import { OrderKpis, CustomerConsumptionSummary, OrderDetailDto } from '../models/order.model';
 
 @Injectable({
   providedIn: 'root'
@@ -24,5 +24,9 @@ export class OrderService {
     return this.http.get(`${this.apiUrl}/general-consumption/export-csv`, {
       responseType: 'blob'
     });
+  }
+
+  getUserPendingOrders(customerId: number): Observable<OrderDetailDto[]> {
+    return this.http.get<OrderDetailDto[]>(`${this.apiUrl}/customers/${customerId}/detail`);
   }
 }

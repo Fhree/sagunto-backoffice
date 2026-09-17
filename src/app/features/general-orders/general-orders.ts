@@ -1,11 +1,11 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { OrderService } from '../../core/services/order.service';
-import { OrderKpis, CustomerConsumptionSummary } from '../../core/models/order.model';
+import { OrderKpis, CustomerConsumptionSummary, GroupedOrder } from '../../core/models/order.model';
 import { SharedModule } from 'primeng/api';
 
 @Component({
@@ -17,7 +17,8 @@ import { SharedModule } from 'primeng/api';
     TableModule,
     ButtonModule,
     InputTextModule,
-    SharedModule
+    SharedModule,
+    DatePipe
   ],
   templateUrl: './general-order.html',
   styleUrl: './general-order.css'
@@ -25,11 +26,16 @@ import { SharedModule } from 'primeng/api';
 export class GeneralOrdersComponent implements OnInit {
   private readonly orderService = inject(OrderService);
 
+  isModalOpen = signal<boolean>(false);
+  selectedUserName = signal<string>('');
+  loadingDetails = signal<boolean>(false);
+  userOrders = signal<GroupedOrder[]>([]);
+
   loading = signal<boolean>(false);
   exportingCsv = signal<boolean>(false);
   kpis = signal<OrderKpis>({
-    totalPendingDebt: 0, totalImmediatePayments: 0, totalGuests: 0,
-    pendingDebtCount: 0, immediatePaymentsCount: 0, guestsCount: 0
+    totalPendingDebt: 0, totalImmediatePayments: 0, totalGuests: 0, totalAbsolute: 0,
+    pendingDebtCount: 0, immediatePaymentsCount: 0, guestsCount: 0, totalOrdersCount: 0
   });
   
   // Usamos el nuevo modelo
@@ -80,5 +86,41 @@ export class GeneralOrdersComponent implements OnInit {
         this.exportingCsv.set(false);
       }
     });
+  }
+
+  openUserDetail(user: CustomerConsumptionSummary): void {
+    this.selectedUserName.set(user.customerId < 0 ? `${user.name} (Anónimo)` : `${user.name} ${user.surname}`);
+    this.isModalOpen.set(true);
+    this.loadingDetails.set(true);
+
+    this.orderService.getUserPendingOrders(user.customerId).subscribe({
+      next: (flatData) => {
+        // Agrupación del JSON plano por orderId
+        const grouped = flatData.reduce((acc, curr) => {
+          if (!acc[curr.orderId]) {
+            acc[curr.orderId] = {
+              orderId: curr.orderId,
+              orderTotal: curr.orderTotal,
+              items: [],
+              date: curr.date
+            };
+          }
+          acc[curr.orderId].items.push(curr);
+          return acc;
+        }, {} as Record<string, GroupedOrder>);
+
+        this.userOrders.set(Object.values(grouped));
+        this.loadingDetails.set(false);
+      },
+      error: (err) => {
+        console.error('Error cargando detalles del usuario:', err);
+        this.loadingDetails.set(false);
+      }
+    });
+  }
+
+  closeModal(): void {
+    this.isModalOpen.set(false);
+    this.userOrders.set([]);
   }
 }
