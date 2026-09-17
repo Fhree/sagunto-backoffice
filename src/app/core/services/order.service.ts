@@ -13,7 +13,7 @@ export class OrderService {
   private readonly apiUrl = environment.apiUrl;
 
   getKpis(): Observable<OrderKpis> {
-    return this.http.get<OrderKpis>(`${this.apiUrl}/kpis`);
+    return this.http.get<OrderKpis>(`${this.apiUrl}/reports/kpis`);
   }
 
 
