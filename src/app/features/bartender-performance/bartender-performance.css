@@ -1,0 +1,115 @@
+.dashboard-container {
+    padding-bottom: 2rem;
+}
+
+.view-header {
+    margin-bottom: 2rem;
+}
+
+.module-subtitle {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #10b981;
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.view-header h1 {
+    font-size: 2rem;
+    color: #0f172a;
+    margin: 0 0 0.5rem 0;
+}
+
+.description {
+    color: #64748b;
+    margin: 0;
+}
+
+.loading-state {
+    text-align: center;
+    padding: 4rem;
+    color: #64748b;
+    font-weight: 500;
+    font-size: 1.1rem;
+}
+
+/* Tarjetas KPI para 4 camareros exactos */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.kpi-card {
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+}
+
+.kpi-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.kpi-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #64748b;
+}
+
+.kpi-icon-badge {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.kpi-icon-badge.primary { background: #e0e7ff; color: #4f46e5; }
+
+.kpi-value {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 0.5rem;
+}
+
+.kpi-footer {
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+/* Contenedor de la gráfica */
+.chart-wrapper {
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.chart-header {
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.chart-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+}
+
+.chart-container {
+    height: 400px;
+    width: 100%;
+}

@@ -17,6 +17,6 @@ interface NavItem {
 export class SidebarComponent {
   navItems: NavItem[] = [
     { label: 'Consumo General', icon: 'pi pi-chart-bar', route: '/' },
-    { label: 'Rendimiento camareros', icon: 'pi pi-users', route: '/camareros' },
+    { label: 'Rendimiento camareros', icon: 'pi pi-users', route: '/performance-bartenders' },
   ];
 }

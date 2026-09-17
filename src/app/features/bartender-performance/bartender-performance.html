@@ -1,0 +1,43 @@
+<div class="dashboard-container">
+  <header class="view-header">
+    <div class="header-titles">
+      <span class="module-subtitle">RECURSOS HUMANOS</span>
+      <h1>Rendimiento de Camareros</h1>
+      <p class="description">Métricas de ventas y evolución temporal por empleado</p>
+    </div>
+  </header>
+
+  @if (loading()) {
+    <div class="loading-state">Cargando métricas del personal...</div>
+  } @else {
+    
+    <!-- Cuadrícula de KPIs dinámicos -->
+    <section class="kpi-grid">
+      @for (bartender of bartenders(); track bartender.bartenderId) {
+        <article class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">{{ bartender.name | uppercase }}</span>
+            <div class="kpi-icon-badge primary">
+              <i class="pi pi-user"></i>
+            </div>
+          </div>
+          <div class="kpi-value">{{ bartender.totalRevenue | currency:'EUR':'symbol':'1.2-2':'es-ES' }}</div>
+          <div class="kpi-footer">
+            <span class="kpi-counter"><strong>{{ bartender.totalConsumptions }}</strong> consumiciones servidas</span>
+          </div>
+        </article>
+      }
+    </section>
+
+    <!-- Gráfica temporal -->
+    <section class="chart-wrapper">
+      <div class="chart-header">
+        <h2>Evolución Diaria de Consumiciones</h2>
+      </div>
+      <div class="chart-container">
+        <p-chart type="line" [data]="chartData()" [options]="chartOptions()"></p-chart>
+      </div>
+    </section>
+
+  }
+</div>
