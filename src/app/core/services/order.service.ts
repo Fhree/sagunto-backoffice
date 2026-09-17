@@ -3,20 +3,20 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { OrderKpis, CustomerConsumptionSummary, OrderDetailDto } from '../models/order.model';
 import { BartenderPerformanceDto } from '../models/bartender.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrderService {
   private readonly http = inject(HttpClient);
-  // Puerto corregido al 7010
-  private readonly apiUrl = 'http://localhost:7010/api/reports';
+  private readonly apiUrl = environment.apiUrl;
 
   getKpis(): Observable<OrderKpis> {
     return this.http.get<OrderKpis>(`${this.apiUrl}/kpis`);
   }
 
-  // Apuntamos al endpoint correcto y devolvemos la nueva interfaz
+
   getGeneralConsumption(): Observable<CustomerConsumptionSummary[]> {
     return this.http.get<CustomerConsumptionSummary[]>(`${this.apiUrl}/general-consumption`);
   }
