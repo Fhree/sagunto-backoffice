@@ -1,0 +1,309 @@
+/* =========================================================
+   1. CABECERA DE LA VISTA Y BOTONES
+   ========================================================= */
+.view-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2rem;
+}
+
+.header-titles .module-subtitle {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #10b981;
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.header-titles h1 {
+    font-size: 2rem;
+    color: #0f172a;
+    margin: 0 0 0.5rem 0;
+}
+
+.header-titles .description {
+    color: #64748b;
+    margin: 0;
+}
+
+/* Botón de exportar a CSV Headless */
+.export-btn {
+    background-color: #10b981;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.25rem;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background-color 0.2s;
+    font-size: 0.95rem;
+}
+
+.export-btn:hover {
+    background-color: #059669;
+}
+
+/* =========================================================
+   2. TARJETAS KPI
+   ========================================================= */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.kpi-card {
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+}
+
+.highlight-card {
+    border-left: 4px solid #ef4444;
+}
+
+.kpi-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.kpi-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.kpi-value {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 0.5rem;
+}
+
+.kpi-footer {
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.kpi-icon-badge {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.kpi-icon-badge.danger { background: #fee2e2; color: #ef4444; }
+.kpi-icon-badge.success { background: #dcfce7; color: #22c55e; }
+.kpi-icon-badge.neutral { background: #f1f5f9; color: #64748b; }
+
+/* =========================================================
+   3. ESTRUCTURA DE LA TABLA (CONTENEDOR)
+   ========================================================= */
+.table-wrapper {
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.table-caption {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1.5rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.caption-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.search-input {
+    position: relative;
+    width: 320px;
+}
+
+.search-input i {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+}
+
+.search-input input {
+    width: 100%;
+    padding: 0.6rem 0.6rem 0.6rem 2.25rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.search-input input:focus {
+    border-color: #10b981;
+}
+
+.id-badge {
+    background: #f1f5f9;
+    color: #475569;
+    padding: 0.35rem 0.6rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.user-fullname {
+    font-weight: 500;
+    color: #334155;
+}
+
+.debt-cell {
+    font-weight: 600;
+    color: #0f172a;
+    font-size: 1.1rem;
+}
+
+/* Botón de detalle artesanal */
+.detail-btn {
+    background-color: transparent;
+    color: #3b82f6;
+    border: 1px solid #bfdbfe;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+
+.detail-btn:hover {
+    background-color: #eff6ff;
+}
+
+/* =========================================================
+   4. ESTILOS INTERNOS HEADLESS (PRIMENG OVERRIDES)
+   ========================================================= */
+:host ::ng-deep .p-datatable { width: 100%; }
+
+:host ::ng-deep .p-datatable table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
+    text-align: left;
+    padding: 1.25rem 1rem;
+    background-color: #f8fafc;
+    color: #475569;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid #e2e8f0;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-thead > tr > th:hover {
+    background-color: #f1f5f9;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+    padding: 1rem;
+    border-bottom: 1px solid #f1f5f9;
+    color: #334155;
+    vertical-align: middle;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr:hover > td {
+    background-color: #f8fafc;
+}
+
+:host ::ng-deep .p-paginator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1.25rem 1rem;
+    background: #ffffff;
+    border-top: 1px solid #e2e8f0;
+    gap: 0.5rem;
+}
+
+:host ::ng-deep .p-paginator-pages {
+    display: flex;
+    gap: 0.25rem;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+:host ::ng-deep .p-paginator-page,
+:host ::ng-deep .p-paginator-next,
+:host ::ng-deep .p-paginator-prev,
+:host ::ng-deep .p-paginator-first,
+:host ::ng-deep .p-paginator-last {
+    background: transparent;
+    border: 1px solid #cbd5e1;
+    color: #475569;
+    min-width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+:host ::ng-deep .p-paginator-page.p-highlight {
+    background: #10b981;
+    color: white;
+    border-color: #10b981;
+}
+
+:host ::ng-deep .p-paginator-page:hover:not(.p-highlight),
+:host ::ng-deep .p-paginator-next:hover,
+:host ::ng-deep .p-paginator-prev:hover {
+    background: #f1f5f9;
+    border-color: #94a3b8;
+}
+
+/* =========================================================
+   5. NEUTRALIZACIÓN DE BORDES RESIDUALES DE PRIMENG
+   ========================================================= */
+:host ::ng-deep .p-datatable-header {
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+}
+
+:host ::ng-deep .p-datatable-wrapper {
+    border: none !important;
+}
+
+:host ::ng-deep .p-paginator {
+    border-right: none !important;
+    border-bottom: none !important;
+    border-left: none !important;
+    border-top: 1px solid #e2e8f0 !important;
+}

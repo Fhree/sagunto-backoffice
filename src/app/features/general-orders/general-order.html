@@ -1,0 +1,136 @@
+<div class="dashboard-container">
+  <!-- Cabecera de la vista -->
+  <header class="view-header">
+    <div class="header-titles">
+      <span class="module-subtitle">AUDITORÍA Y CONTROL DE BARRA</span>
+      <h1>Consumo General de la Agrupación</h1>
+      <p class="description">Monitoreo consolidado de consumos, cobros en el acto y cuentas pendientes.</p>
+    </div>
+    <div class="header-actions">
+      <button 
+        pButton 
+        type="button" 
+        icon="pi pi-file-export" 
+        label="Exportar a CSV" 
+        class="p-button-success export-btn"
+        [loading]="exportingCsv()"
+        (click)="downloadCsv()">EXPORTAR A CSV
+      </button>
+    </div>
+  </header>
+
+  <!-- Tarjetas KPI -->
+  <section class="kpi-grid">
+    <!-- KPI 1: Pendiente Saguntinos -->
+    <article class="kpi-card highlight-card">
+      <div class="kpi-header">
+        <span class="kpi-title">TOTAL PENDIENTE (SAGUNTINOS)</span>
+        <div class="kpi-icon-badge danger">
+          <i class="pi pi-clock"></i>
+        </div>
+      </div>
+      <div class="kpi-value">{{ kpis().totalPendingDebt | currency:'EUR':'symbol':'1.2-2':'es-ES' }}</div>
+      <div class="kpi-footer">
+        <span class="kpi-counter"><strong>{{ kpis().pendingDebtCount }}</strong> socios con cuentas sin liquidar</span>
+      </div>
+    </article>
+
+    <!-- KPI 2: Abonados en el momento -->
+    <article class="kpi-card">
+      <div class="kpi-header">
+        <span class="kpi-title">TOTAL CONSUMICIONES ABONADAS EN EL ACTO POR SAGUNTINOS</span>
+        <div class="kpi-icon-badge success">
+          <i class="pi pi-check-circle"></i>
+        </div>
+      </div>
+      <div class="kpi-value">{{ kpis().totalImmediatePayments | currency:'EUR':'symbol':'1.2-2':'es-ES' }}</div>
+      <div class="kpi-footer">
+        <span class="kpi-counter"><strong>{{ kpis().immediatePaymentsCount }}</strong> pagos directos registrados</span>
+      </div>
+    </article>
+
+    <!-- KPI 3: Invitados -->
+    <article class="kpi-card">
+      <div class="kpi-header">
+        <span class="kpi-title">TOTAL CONSUMICIONES POR INVITADOS</span>
+        <div class="kpi-icon-badge neutral">
+          <i class="pi pi-users"></i>
+        </div>
+      </div>
+      <div class="kpi-value">{{ kpis().totalGuests | currency:'EUR':'symbol':'1.2-2':'es-ES' }}</div>
+      <div class="kpi-footer">
+        <span class="kpi-counter"><strong>{{ kpis().guestsCount }}</strong> comandas registradas</span>
+      </div>
+    </article>
+  </section>
+
+  <!-- Tabla de Morosos / Cuentas Pendientes -->
+<section class="table-wrapper">
+  <p-table 
+    #dt 
+    [value]="consumptions()" 
+    dataKey="customerId"
+    [paginator]="true" 
+    [rows]="10" 
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [loading]="loading()"
+    [globalFilterFields]="['name', 'surname', 'customerId']"
+    styleClass="p-datatable-striped">
+    
+    <!-- CAMBIO 1: #caption en lugar de pTemplate="caption" -->
+    <ng-template #caption>
+      <div class="table-caption">
+        <span class="caption-title">Consumo Histórico por Saguntino</span>
+        <div class="p-input-icon-left search-input">
+          <i class="pi pi-search"></i>
+          <input 
+            pInputText 
+            type="text" 
+            (input)="dt.filterGlobal($any($event.target).value, 'contains')" 
+            placeholder="Buscar por nombre, apellido o ID..." />
+        </div>
+      </div>
+    </ng-template>
+
+    <!-- CAMBIO 2: #header en lugar de pTemplate="header" -->
+    <ng-template #header>
+      <tr>
+        <th pSortableColumn="name">
+            Saguntino <i class="pi pi-sort-alt"></i>
+        </th>
+        <th pSortableColumn="totalConsumed" style="width: 180px; text-align: right;">
+            Total Consumido <i class="pi pi-sort-alt"></i>
+        </th>
+      </tr>
+    </ng-template>
+
+    <!-- CAMBIO 3: #body en lugar de pTemplate="body" -->
+    <ng-template #body let-row>
+      <tr>
+        <td class="user-cell">
+          <span class="user-fullname">
+            @if (row.customerId < 0) {
+              {{ row.name }} (Anónimo)
+            } @else {
+              {{ row.name }} {{ row.surname }}
+            }
+          </span>
+        </td>
+        <td style="text-align: right;" class="debt-cell">
+          {{ row.totalConsumed | currency:'EUR':'symbol':'1.2-2':'es-ES' }}
+        </td>
+      </tr>
+    </ng-template>
+
+    <!-- CAMBIO 4: #emptymessage en lugar de pTemplate="emptymessage" -->
+    <ng-template #emptymessage>
+      <tr>
+        <td colspan="4" class="empty-message">
+          <i class="pi pi-info-circle success-icon" style="color: #64748b;"></i>
+          <p>No hay consumos registrados en el sistema.</p>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</section>
+</div>
