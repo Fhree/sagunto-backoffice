@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { GeneralOrdersComponent } from './features/general-orders/general-orders';
 import { BartenderPerformanceComponent } from './features/bartender-performance/bartender-performance';
 import { SaguntinosListComponent } from './features/saguntinos/saguntinos-list';
+import { ProductSalesComponent } from './features/product-sales/product-sales';
 
 export const routes: Routes = [
   {
@@ -18,6 +19,11 @@ export const routes: Routes = [
     path: 'saguntinos',
     component: SaguntinosListComponent,
     title: 'Sagunto | Saguntinos'
+  },
+  {
+    path: 'products',
+    component: ProductSalesComponent,
+    title: 'Sagunto | Ventas de Productos'
   },
   {
     path: '**',

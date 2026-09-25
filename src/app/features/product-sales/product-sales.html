@@ -1,0 +1,166 @@
+<div class="dashboard-container">
+  <!-- Cabecera de la vista (Heredada de tu estándar) -->
+  <header class="view-header">
+    <div class="header-titles">
+      <span class="module-subtitle">AUDITORÍA Y CONTROL DE BARRA</span>
+      <h1>Ventas por Producto</h1>
+      <p class="description">Desglose analítico segmentado por tipo de cliente</p>
+    </div>
+    
+    <div class="header-actions">
+      <!-- Selector nativo con @for -->
+      <div class="custom-toggle-group">
+        @for (option of viewOptions; track option.value) {
+          <button 
+            class="toggle-btn"
+            [class.active]="selectedView() === option.value"
+            (click)="selectedView.set(option.value)">
+            {{ option.label }}
+          </button>
+        }
+      </div>
+    </div>
+  </header>
+
+  <!-- Leyenda Estratégica con @if -->
+  @if (selectedView() === 'combined') {
+    <div class="legend-box">
+      <div class="legend-icon">
+        <i class="pi pi-info-circle"></i>
+      </div>
+      <div class="legend-content">
+        <span class="legend-title">Guía de lectura de la vista combinada</span>
+        <p class="legend-text">
+          El formato de las celdas muestra primero el consumo de los <strong>Saguntinos</strong> y luego el de los <strong>Invitados / Barra Libre</strong>
+        </p>
+        <div class="legend-example">
+          Estructura: <span class="format-badge">(Uds Saguntinos - € Saguntinos) - (Uds Invitados - € Invitados)</span>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Estructura de la Tabla (Contenedor estándar + Scrollable) -->
+  <section class="table-wrapper scrollable-wrapper">
+    <p-table 
+      #dt 
+      [value]="products()" 
+      dataKey="productName"
+      [loading]="loading()"
+      [paginator]="false" 
+      [rows]="20" 
+      [rowsPerPageOptions]="[10, 25, 50]"
+      [globalFilterFields]="['productName']"
+      styleClass="p-datatable-striped">
+      
+      <!-- Caption con el buscador integrado -->
+      <ng-template #caption>
+        <div class="table-caption">
+          <span class="caption-title">Matriz Dinámica de Inventario</span>
+          <div class="search-input">
+            <i class="pi pi-search"></i>
+            <input 
+              type="text" 
+              (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+              placeholder="Buscar producto..." 
+            >
+          </div>
+        </div>
+      </ng-template>
+
+      <!-- Cabeceras con @for -->
+      <ng-template #header>
+        <tr>
+          <th pSortableColumn="productName" class="sticky-column">
+            Producto <i class="pi pi-sort-alt"></i>
+          </th>
+          
+          @for (day of festiveDays(); track day) {
+            <th style="text-align: center;">
+              {{ day }}
+            </th>
+          }
+          
+          <th style="text-align: center; color: #047857;">
+            Total Segmentado
+          </th>
+          <th pSortableColumn="absoluteTotal" style="text-align: right; color: #0f172a;">
+            Total Bruto <i class="pi pi-sort-alt"></i>
+          </th>
+        </tr>
+      </ng-template>
+
+      <!-- Cuerpo de la tabla usando @for y @switch -->
+      <ng-template #body let-row>
+        <tr class="clickable-row">
+          <td class="sticky-column font-bold" style="color: #0f172a;">
+            {{ row.productName }}
+          </td>
+          
+          @for (daily of row.dailySales; track daily.festiveBlock) {
+            <td style="text-align: center;" class="font-mono">
+              @switch (selectedView()) {
+                
+                @case ('saguntinos') {
+                  <span class="saguntino-segment font-bold">
+                    {{ daily.saguntinos.quantity }} uds - {{ daily.saguntinos.revenue | number:'1.0-2':'es-ES' }}€
+                  </span>
+                }
+                
+                @case ('guests') {
+                  <span class="guest-segment font-bold">
+                    {{ daily.guests.quantity }} uds - {{ daily.guests.revenue | number:'1.0-2':'es-ES' }}€
+                  </span>
+                }
+                
+                @case ('combined') {
+                  <span class="saguntino-segment">({{ daily.saguntinos.quantity }} - {{ daily.saguntinos.revenue | number:'1.0-2':'es-ES' }}€)</span>
+                  <span class="segment-divider"> - </span>
+                  <span class="guest-segment">({{ daily.guests.quantity }} - {{ daily.guests.revenue | number:'1.0-2':'es-ES' }}€)</span>
+                }
+              }
+            </td>
+          }
+          
+          <td style="text-align: center; background-color: #f0fdf4;" class="font-mono">
+            @switch (selectedView()) {
+              
+              @case ('saguntinos') {
+                <span class="saguntino-segment font-bold">
+                  {{ row.totalSaguntinos.quantity }} uds - {{ row.totalSaguntinos.revenue | number:'1.0-2':'es-ES' }}€
+                </span>
+              }
+              
+              @case ('guests') {
+                <span class="guest-segment font-bold">
+                  {{ row.totalGuests.quantity }} uds - {{ row.totalGuests.revenue | number:'1.0-2':'es-ES' }}€
+                </span>
+              }
+              
+              @case ('combined') {
+                <span class="saguntino-segment font-bold">({{ row.totalSaguntinos.quantity }} - {{ row.totalSaguntinos.revenue | number:'1.0-2':'es-ES' }}€)</span>
+                <span class="segment-divider font-bold"> - </span>
+                <span class="guest-segment font-bold">({{ row.totalGuests.quantity }} - {{ row.totalGuests.revenue | number:'1.0-2':'es-ES' }}€)</span>
+              }
+            }
+          </td>
+          
+          <td style="text-align: right;" class="debt-cell">
+            {{ row.absoluteTotal | currency:'EUR':'symbol':'1.2-2':'es-ES' }}
+          </td>
+        </tr>
+      </ng-template>
+
+      <!-- Empty message intacto -->
+      <ng-template #emptymessage>
+        <tr>
+          <!-- colspan dinámico brutal para abarcar todas las columnas -->
+          <td [attr.colspan]="festiveDays().length + 3" class="empty-message" style="text-align: center; padding: 3rem;">
+            <i class="pi pi-info-circle" style="color: #64748b; font-size: 2.5rem; margin-bottom: 1rem;"></i>
+            <p style="color: #64748b; font-weight: 500;">No hay registros de ventas para mostrar</p>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </section>
+</div>
